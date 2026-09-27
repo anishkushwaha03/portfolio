@@ -15,7 +15,7 @@ export default function Education() {
 
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
           <Reveal delay={1}>
-            <article className="surface h-full p-7 sm:p-8">
+            <article className="surface h-full min-w-0 p-5 sm:p-7 lg:p-8">
               <span
                 className="grid h-10 w-10 place-items-center rounded-lg bg-brand-soft text-brand"
                 aria-hidden
@@ -49,7 +49,7 @@ export default function Education() {
           <Reveal delay={2}>
             <div className="grid h-full gap-6">
               {achievements.map((item) => (
-                <article key={item.title} className="surface h-full p-7 sm:p-8">
+                <article key={item.title} className="surface h-full min-w-0 p-5 sm:p-7 lg:p-8">
                   <span
                     className="grid h-10 w-10 place-items-center rounded-lg bg-accent-soft text-accent"
                     aria-hidden

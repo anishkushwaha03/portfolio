@@ -63,8 +63,8 @@ export default function Contact() {
         </Reveal>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-12">
-          <Reveal delay={1} className="lg:col-span-7">
-            <article className="surface h-full p-7 sm:p-9">
+          <Reveal delay={1} className="min-w-0 lg:col-span-7">
+            <article className="surface h-full min-w-0 p-5 sm:p-8 lg:p-9">
               <span
                 className="grid h-11 w-11 place-items-center rounded-lg bg-brand-soft text-brand"
                 aria-hidden
@@ -115,7 +115,7 @@ export default function Contact() {
             </article>
           </Reveal>
 
-          <Reveal delay={2} className="lg:col-span-5">
+          <Reveal delay={2} className="min-w-0 lg:col-span-5">
             <ul className="grid h-full gap-4 sm:grid-cols-2 lg:grid-cols-1">
               {channels.map(({ key, label, value, href, Icon, external }) => (
                 <li key={key}>

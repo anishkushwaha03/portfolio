@@ -45,12 +45,13 @@ export default function Skills() {
         </Reveal>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-12">
-          {/* Category rail — scrolls horizontally on narrow screens. */}
-          <Reveal delay={1} className="lg:col-span-4">
+          {/* Category rail — wraps on narrow screens, stacks into a column on desktop.
+              min-w-0 lets this grid item shrink below its content's intrinsic width. */}
+          <Reveal delay={1} className="min-w-0 lg:col-span-4">
             <div
               role="tablist"
               aria-label="Skill categories"
-              className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0"
+              className="flex flex-wrap gap-2 lg:flex-col lg:flex-nowrap"
             >
               {skillGroups.map((group) => {
                 const Icon = icons[group.icon];
@@ -65,7 +66,7 @@ export default function Skills() {
                     aria-controls={`panel-${group.id}`}
                     onClick={() => setActiveId(group.id)}
                     className={cn(
-                      "group flex shrink-0 items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-medium transition-colors lg:w-full",
+                      "group flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left text-xs font-medium transition-colors sm:gap-3 sm:px-4 sm:py-3 sm:text-sm lg:w-full",
                       isActive
                         ? "border-brand/40 bg-brand-soft text-ink"
                         : "border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
@@ -91,12 +92,12 @@ export default function Skills() {
             </div>
           </Reveal>
 
-          <Reveal delay={2} className="lg:col-span-8">
+          <Reveal delay={2} className="min-w-0 lg:col-span-8">
             <div
               role="tabpanel"
               id={`panel-${active.id}`}
               aria-labelledby={`tab-${active.id}`}
-              className="surface h-full p-7 sm:p-9"
+              className="surface h-full p-5 sm:p-8 lg:p-9"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div

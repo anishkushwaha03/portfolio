@@ -76,7 +76,7 @@ export default function Projects() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                className="surface surface-lift flex flex-col p-7 sm:p-8"
+                className="surface surface-lift flex min-w-0 flex-col p-5 sm:p-7 lg:p-8"
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="chip border-brand/30 bg-brand-soft text-brand">

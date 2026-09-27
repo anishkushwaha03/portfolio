@@ -38,8 +38,8 @@ export default function About() {
         </Reveal>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-12">
-          <Reveal delay={1} className="lg:col-span-7">
-            <article className="surface h-full p-7 sm:p-9">
+          <Reveal delay={1} className="min-w-0 lg:col-span-7">
+            <article className="surface h-full min-w-0 p-5 sm:p-8 lg:p-9">
               <p className="text-ink-soft">{profile.about}</p>
 
               <hr className="rule my-7" />
@@ -68,7 +68,7 @@ export default function About() {
             </article>
           </Reveal>
 
-          <div className="grid gap-6 lg:col-span-5">
+          <div className="grid min-w-0 gap-6 lg:col-span-5">
             <Reveal delay={2}>
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                 {highlights.map((item) => {

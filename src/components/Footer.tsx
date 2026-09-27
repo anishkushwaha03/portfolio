@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="border-t border-line bg-canvas">
       <div className="rail py-14">
         <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-5">
+          <div className="min-w-0 md:col-span-5">
             <a href="#home" className="inline-flex items-center gap-2.5">
               <span
                 className="grid h-9 w-9 place-items-center rounded-lg bg-[linear-gradient(105deg,var(--grad-from),var(--grad-to))] font-display text-sm font-semibold text-white"
@@ -53,7 +53,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <nav className="md:col-span-3" aria-label="Footer">
+          <nav className="min-w-0 md:col-span-3" aria-label="Footer">
             <h2 className="font-mono text-xs uppercase tracking-wider text-ink-faint">Sections</h2>
             <ul className="mt-4 space-y-2.5">
               {navLinks.map((link) => (
@@ -69,7 +69,7 @@ export default function Footer() {
             </ul>
           </nav>
 
-          <div className="md:col-span-4">
+          <div className="min-w-0 md:col-span-4">
             <h2 className="font-mono text-xs uppercase tracking-wider text-ink-faint">
               Built with
             </h2>

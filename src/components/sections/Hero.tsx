@@ -112,12 +112,17 @@ export default function Hero() {
 
         <motion.dl
           {...rise(0.5)}
-          className="mt-16 grid w-full max-w-2xl grid-cols-3 divide-x divide-line rounded-xl border border-line bg-surface/60 py-6 backdrop-blur-sm"
+          className="mt-14 grid w-full max-w-2xl grid-cols-3 divide-x divide-line rounded-xl border border-line bg-surface/60 py-5 backdrop-blur-sm sm:mt-16 sm:py-6"
         >
           {/* col-reverse keeps dt before dd in the markup while the number reads first. */}
           {stats.map((s) => (
-            <div key={s.label} className="flex flex-col-reverse items-center gap-1 px-2">
-              <dt className="text-center text-xs leading-snug text-ink-muted sm:text-sm">
+            <div
+              key={s.label}
+              className="flex min-w-0 flex-col-reverse items-center justify-end gap-1 px-1.5 sm:px-2"
+            >
+              {/* Reserving two lines keeps the three numbers on one baseline
+                  even when a label wraps. */}
+              <dt className="min-h-[2.6em] text-center text-[0.6875rem] leading-snug text-balance text-ink-muted sm:min-h-0 sm:text-sm">
                 {s.label}
               </dt>
               <dd className="font-display text-fluid-2xl font-semibold tabular-nums">

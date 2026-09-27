@@ -19,7 +19,7 @@ export default function Experience() {
         <div className="mt-12 space-y-6">
           {experience.map((job, i) => (
             <Reveal key={job.company} delay={i + 1}>
-              <article className="surface p-7 sm:p-9">
+              <article className="surface min-w-0 p-5 sm:p-8 lg:p-9">
                 <header className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
                   <div>
                     <h3 className="flex items-center gap-2.5 font-display text-fluid-2xl font-semibold">
@@ -52,7 +52,8 @@ export default function Experience() {
                         <span className="chip border-ok/30 bg-ok-soft text-ok">Current</span>
                       )}
                       <span className="chip">{role.type}</span>
-                      <span className="ml-auto font-mono text-xs tabular-nums text-ink-faint">
+                      {/* Full width once it wraps, so the date never orphans right-aligned. */}
+                      <span className="w-full font-mono text-xs tabular-nums text-ink-faint sm:ml-auto sm:w-auto sm:text-right">
                         {role.period}
                       </span>
                     </li>
