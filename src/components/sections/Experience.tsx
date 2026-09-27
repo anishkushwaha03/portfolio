@@ -1,97 +1,87 @@
-"use client";
-import { motion } from "motion/react";
-import { Briefcase, Calendar, MapPin } from "lucide-react";
-
-const experience = [
-  {
-    role: "Software Developer (Full-Time)",
-    company: "LawDocs",
-    location: "Jaipur, Rajasthan (Remote)",
-    date: "August 2026 – Present",
-    highlights: [
-      "Promoted from intern to full-time based on end-to-end ownership of core platform features.",
-      "Built a full-stack Online Dispute Resolution (ODR) platform using Next.js, Node.js, and PostgreSQL.",
-      "Designed normalized schemas on Supabase with Row Level Security (RLS) enforcing strict data privacy.",
-      "Implemented real-time chat with WebSockets (Socket.io) backed by Redis message caching."
-    ]
-  },
-  {
-    role: "Software Developer Intern",
-    company: "LawDocs",
-    location: "Jaipur, Rajasthan (Remote)",
-    date: "March 2026 – August 2026",
-    highlights: [
-      "Developed secure RESTful API endpoints with JWT authentication and RBAC.",
-      "Integrated AWS S3 for scalable document storage and evidence management.",
-      "Collaborated in an Agile workflow using Git and GitHub for pull-request code reviews."
-    ]
-  }
-];
+import { Building2, MapPin } from "lucide-react";
+import Reveal from "@/components/Reveal";
+import { experience } from "@/lib/data";
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-24 relative overflow-hidden bg-slate-900/50">
-      <div className="container mx-auto px-6 max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
-        >
-          <span className="section-tag">Experience</span>
+    <section id="experience" className="section bg-canvas-alt">
+      <div className="rail">
+        <Reveal className="max-w-2xl">
+          <p className="eyebrow">Experience</p>
           <h2 className="section-title">
-            Professional <span className="gradient-text">Journey</span>
+            Where I&rsquo;ve <span className="gradient-text">done the work</span>
           </h2>
-          <p className="section-subtitle mx-auto">
-            My track record of delivering production-grade applications.
+          <p className="section-lede">
+            One company, two titles — the second earned five months into the first.
           </p>
-        </motion.div>
+        </Reveal>
 
-        <div className="space-y-12">
-          {experience.map((exp, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-              className="glass-card p-8 relative group"
-            >
-              <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-indigo-500 to-cyan-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-                <div>
-                  <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-                    {exp.role}
-                  </h3>
-                  <div className="text-indigo-400 font-medium text-lg mt-1 flex items-center gap-2">
-                    <Briefcase size={18} />
-                    {exp.company}
+        <div className="mt-12 space-y-6">
+          {experience.map((job, i) => (
+            <Reveal key={job.company} delay={i + 1}>
+              <article className="surface p-7 sm:p-9">
+                <header className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
+                  <div>
+                    <h3 className="flex items-center gap-2.5 font-display text-fluid-2xl font-semibold">
+                      <span
+                        className="grid h-9 w-9 place-items-center rounded-lg bg-brand-soft text-brand"
+                        aria-hidden
+                      >
+                        <Building2 size={18} />
+                      </span>
+                      {job.company}
+                    </h3>
+                    <p className="mt-2 flex items-center gap-1.5 text-sm text-ink-faint">
+                      <MapPin size={14} aria-hidden />
+                      {job.location}
+                    </p>
                   </div>
-                </div>
-                
-                <div className="flex flex-col gap-2 text-slate-400 text-sm">
-                  <div className="flex items-center gap-2 md:justify-end">
-                    <Calendar size={16} />
-                    {exp.date}
-                  </div>
-                  <div className="flex items-center gap-2 md:justify-end">
-                    <MapPin size={16} />
-                    {exp.location}
-                  </div>
-                </div>
-              </div>
+                </header>
 
-              <ul className="space-y-3">
-                {exp.highlights.map((highlight, hIndex) => (
-                  <li key={hIndex} className="flex gap-3 text-slate-300">
-                    <span className="text-cyan-500 mt-1.5">•</span>
-                    <span className="leading-relaxed">{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
+                <p className="mt-5 text-sm text-ink-muted">{job.summary}</p>
+
+                {/* Role progression inside the company. */}
+                <ol className="mt-6 space-y-3">
+                  {job.roles.map((role) => (
+                    <li
+                      key={role.title}
+                      className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-line bg-surface-raised px-4 py-3"
+                    >
+                      <span className="font-medium">{role.title}</span>
+                      {role.current && (
+                        <span className="chip border-ok/30 bg-ok-soft text-ok">Current</span>
+                      )}
+                      <span className="chip">{role.type}</span>
+                      <span className="ml-auto font-mono text-xs tabular-nums text-ink-faint">
+                        {role.period}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+
+                <hr className="rule my-7" />
+
+                <ul className="space-y-3">
+                  {job.highlights.map((point) => (
+                    <li key={point} className="flex gap-3 text-sm text-ink-soft">
+                      <span
+                        className="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-accent"
+                        aria-hidden
+                      />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <ul className="mt-7 flex flex-wrap gap-2">
+                  {job.stack.map((tech) => (
+                    <li key={tech} className="chip">
+                      {tech}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>

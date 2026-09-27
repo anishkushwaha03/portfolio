@@ -1,122 +1,134 @@
 "use client";
+
 import { useState } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import {
+  Cloud,
+  Code2,
+  Compass,
+  Database,
+  Monitor,
+  Server,
+  Sparkles,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import Reveal from "@/components/Reveal";
+import { skillGroups } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
-const tabs = [
-  { id: "all", label: "All Skills", icon: "🚀" },
-  { id: "frontend", label: "Frontend", icon: "🖥️" },
-  { id: "backend", label: "Backend", icon: "⚙️" },
-  { id: "database", label: "Databases", icon: "🗄️" },
-  { id: "cloud", label: "Cloud/DevOps", icon: "🔧" },
-  { id: "ai", label: "AI/GenAI", icon: "🤖" },
-];
-
-const skills = [
-  { name: "React.js", category: "frontend", color: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-400/20" },
-  { name: "Next.js", category: "frontend", color: "text-white", bg: "bg-white/10", border: "border-white/20" },
-  { name: "Tailwind CSS", category: "frontend", color: "text-sky-400", bg: "bg-sky-400/10", border: "border-sky-400/20" },
-  { name: "Redux Toolkit", category: "frontend", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-400/20" },
-  { name: "TanStack Query", category: "frontend", color: "text-red-400", bg: "bg-red-400/10", border: "border-red-400/20" },
-  
-  { name: "Node.js", category: "backend", color: "text-green-400", bg: "bg-green-400/10", border: "border-green-400/20" },
-  { name: "Express.js", category: "backend", color: "text-slate-300", bg: "bg-slate-400/10", border: "border-slate-400/20" },
-  { name: "REST APIs", category: "backend", color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-400/20" },
-  { name: "WebSockets", category: "backend", color: "text-orange-400", bg: "bg-orange-400/10", border: "border-orange-400/20" },
-  { name: "JWT & RBAC", category: "backend", color: "text-rose-400", bg: "bg-rose-400/10", border: "border-rose-400/20" },
-  
-  { name: "PostgreSQL", category: "database", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-400/20" },
-  { name: "MongoDB", category: "database", color: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/20" },
-  { name: "Supabase", category: "database", color: "text-emerald-500", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
-  { name: "Redis", category: "database", color: "text-red-500", bg: "bg-red-500/10", border: "border-red-500/20" },
-  
-  { name: "AWS S3", category: "cloud", color: "text-amber-500", bg: "bg-amber-500/10", border: "border-amber-500/20" },
-  { name: "Vercel", category: "cloud", color: "text-white", bg: "bg-white/10", border: "border-white/20" },
-  { name: "Docker", category: "cloud", color: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/20" },
-  { name: "GitHub Actions", category: "cloud", color: "text-slate-300", bg: "bg-slate-400/10", border: "border-slate-400/20" },
-  
-  { name: "Claude API", category: "ai", color: "text-orange-300", bg: "bg-orange-300/10", border: "border-orange-300/20" },
-  { name: "Prompt Engineering", category: "ai", color: "text-fuchsia-400", bg: "bg-fuchsia-400/10", border: "border-fuchsia-400/20" },
-  { name: "Agent Workflows", category: "ai", color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-400/20" },
-  { name: "n8n", category: "ai", color: "text-rose-500", bg: "bg-rose-500/10", border: "border-rose-500/20" },
-];
+const icons: Record<string, LucideIcon> = {
+  code: Code2,
+  monitor: Monitor,
+  server: Server,
+  database: Database,
+  cloud: Cloud,
+  sparkles: Sparkles,
+  compass: Compass,
+};
 
 export default function Skills() {
-  const [activeTab, setActiveTab] = useState("all");
-
-  const filteredSkills = activeTab === "all" 
-    ? skills 
-    : skills.filter(skill => skill.category === activeTab);
+  const [activeId, setActiveId] = useState(skillGroups[1].id);
+  const active = skillGroups.find((g) => g.id === activeId) ?? skillGroups[0];
 
   return (
-    <section id="skills" className="py-24 relative overflow-hidden bg-slate-900/50">
-      <div className="container mx-auto px-6 max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <span className="section-tag">Skills</span>
+    <section id="skills" className="section bg-canvas-alt">
+      <div className="rail">
+        <Reveal className="max-w-2xl">
+          <p className="eyebrow">Skills</p>
           <h2 className="section-title">
-            My Technical <span className="gradient-text">Expertise</span>
+            The <span className="gradient-text">toolkit</span>
           </h2>
-          <p className="section-subtitle mx-auto">
-            A comprehensive toolkit built through hands-on project experience and continuous learning.
+          <p className="section-lede">
+            Grouped by where it sits in the stack. Everything here is something I have shipped
+            with, not just read about.
           </p>
-        </motion.div>
+        </Reveal>
 
-        {/* Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
-        >
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "px-6 py-3 rounded-xl font-medium transition-all flex items-center gap-2 border",
-                activeTab === tab.id
-                  ? "bg-indigo-500/20 border-indigo-500/50 text-white shadow-[0_0_15px_rgba(99,102,241,0.2)]"
-                  : "bg-white/5 border-white/10 text-slate-400 hover:bg-white/10 hover:text-white"
-              )}
+        <div className="mt-12 grid gap-6 lg:grid-cols-12">
+          {/* Category rail — scrolls horizontally on narrow screens. */}
+          <Reveal delay={1} className="lg:col-span-4">
+            <div
+              role="tablist"
+              aria-label="Skill categories"
+              className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0"
             >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-            </button>
-          ))}
-        </motion.div>
+              {skillGroups.map((group) => {
+                const Icon = icons[group.icon];
+                const isActive = group.id === activeId;
+                return (
+                  <button
+                    key={group.id}
+                    type="button"
+                    role="tab"
+                    id={`tab-${group.id}`}
+                    aria-selected={isActive}
+                    aria-controls={`panel-${group.id}`}
+                    onClick={() => setActiveId(group.id)}
+                    className={cn(
+                      "group flex shrink-0 items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-medium transition-colors lg:w-full",
+                      isActive
+                        ? "border-brand/40 bg-brand-soft text-ink"
+                        : "border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
+                    )}
+                  >
+                    <Icon
+                      size={17}
+                      aria-hidden
+                      className={isActive ? "text-brand" : "text-ink-faint"}
+                    />
+                    <span className="whitespace-nowrap">{group.label}</span>
+                    <span
+                      className={cn(
+                        "ml-auto hidden font-mono text-xs tabular-nums lg:inline",
+                        isActive ? "text-brand" : "text-ink-faint"
+                      )}
+                    >
+                      {group.items.length}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </Reveal>
 
-        {/* Cloud Tags */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto"
-        >
-          {filteredSkills.map((skill, index) => (
-            <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: index * 0.02 }}
-              className={cn(
-                "px-5 py-2.5 rounded-full border text-sm font-semibold whitespace-nowrap transition-transform hover:scale-110 cursor-default",
-                skill.bg,
-                skill.border,
-                skill.color
-              )}
+          <Reveal delay={2} className="lg:col-span-8">
+            <div
+              role="tabpanel"
+              id={`panel-${active.id}`}
+              aria-labelledby={`tab-${active.id}`}
+              className="surface h-full p-7 sm:p-9"
             >
-              {skill.name}
-            </motion.div>
-          ))}
-        </motion.div>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={active.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <h3 className="font-display text-fluid-xl font-semibold">{active.label}</h3>
+                    <span className="font-mono text-xs tabular-nums text-ink-faint">
+                      {active.items.length} tools
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm text-ink-muted">{active.blurb}</p>
+
+                  <ul className="mt-6 flex flex-wrap gap-2">
+                    {active.items.map((item) => (
+                      <li
+                        key={item}
+                        className="chip border-line-strong/60 text-ink-soft transition-colors hover:border-brand/50 hover:text-ink"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

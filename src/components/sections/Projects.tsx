@@ -1,128 +1,167 @@
 "use client";
-import { motion } from "motion/react";
-import { ExternalLink, Tag } from "lucide-react";
+
+import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { ArrowUpRight, Code2, Star } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
+import Reveal from "@/components/Reveal";
+import { profile, projects } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
-const projects = [
-  {
-    title: "NexusShop",
-    description: "Multi-vendor e-commerce platform with seller storefronts, admin workflows, and Razorpay payment integration.",
-    category: "E-Commerce",
-    icon: "🛒",
-    techStack: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Redux", "Razorpay"],
-    link: "https://nexus-shop-chi.vercel.app/",
-    color: "indigo"
-  },
-  {
-    title: "Solar Plant EPC Firm Website",
-    description: "Responsive client-facing website with RESTful Express backend for secure form submission and lead management.",
-    category: "Web Application",
-    icon: "☀️",
-    techStack: ["React", "Node.js", "Express.js", "MongoDB", "REST APIs"],
-    color: "cyan"
-  }
-];
-
-const colorMap: Record<string, string> = {
-  indigo: "from-indigo-500/20 to-transparent border-indigo-500/30 text-indigo-400 bg-indigo-500/10",
-  cyan: "from-cyan-500/20 to-transparent border-cyan-500/30 text-cyan-400 bg-cyan-500/10",
-};
+const ALL = "All";
 
 export default function Projects() {
+  const [filter, setFilter] = useState(ALL);
+
+  const categories = useMemo(() => {
+    const counts = new Map<string, number>([[ALL, projects.length]]);
+    for (const p of projects) counts.set(p.category, (counts.get(p.category) ?? 0) + 1);
+    return [...counts.entries()];
+  }, []);
+
+  const visible = filter === ALL ? projects : projects.filter((p) => p.category === filter);
+
   return (
-    <section id="projects" className="py-24 relative overflow-hidden">
-      <div className="container mx-auto px-6 max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-16"
-        >
-          <span className="section-tag">Projects</span>
+    <section id="projects" className="section">
+      <div className="rail">
+        <Reveal className="max-w-2xl">
+          <p className="eyebrow">Projects</p>
           <h2 className="section-title">
-            Things I've <span className="gradient-text">Built</span>
+            Things I&rsquo;ve <span className="gradient-text">shipped</span>
           </h2>
-          <p className="section-subtitle">
-            A showcase of real-world projects built with passion for clean code and great user experience.
+          <p className="section-lede">
+            Two builds I can talk through in detail — what I chose, what I&rsquo;d change, and why.
           </p>
-        </motion.div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-              className="glass-card relative overflow-hidden group p-8"
-            >
-              {/* Accent Gradient */}
-              <div 
-                className={cn(
-                  "absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl blur-3xl rounded-full opacity-50 -mr-20 -mt-20 pointer-events-none transition-all group-hover:opacity-100",
-                  project.color === "indigo" ? "from-indigo-500/30 to-transparent" : "from-cyan-500/30 to-transparent"
-                )}
-              />
+        <Reveal delay={1}>
+          <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter projects">
+            {categories.map(([name, count]) => {
+              const isActive = filter === name;
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => setFilter(name)}
+                  aria-pressed={isActive}
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors",
+                    isActive
+                      ? "border-brand/40 bg-brand-soft text-ink"
+                      : "border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
+                  )}
+                >
+                  {name}
+                  <span
+                    className={cn(
+                      "font-mono text-xs tabular-nums",
+                      isActive ? "text-brand" : "text-ink-faint"
+                    )}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </Reveal>
 
-              <div className="relative z-10">
-                <div className="flex justify-between items-start mb-6">
-                  <div className={cn(
-                    "w-14 h-14 rounded-2xl flex items-center justify-center text-3xl border",
-                    colorMap[project.color]
-                  )}>
-                    {project.icon}
-                  </div>
-                  
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
-                    >
-                      <ExternalLink size={16} />
-                      Live Demo
-                    </a>
+        <ul className="mt-8 grid gap-6 lg:grid-cols-2">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {visible.map((project) => (
+              <motion.li
+                key={project.slug}
+                layout
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                className="surface surface-lift flex flex-col p-7 sm:p-8"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="chip border-brand/30 bg-brand-soft text-brand">
+                    {project.category}
+                  </span>
+                  <span className="chip tabular-nums">{project.year}</span>
+                  {project.featured && (
+                    <span className="chip border-accent/30 bg-accent-soft text-accent">
+                      <Star size={12} aria-hidden />
+                      Featured
+                    </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 mb-4">
-                  <Tag size={16} className={project.color === "indigo" ? "text-indigo-400" : "text-cyan-400"} />
-                  <span className={cn(
-                    "text-sm font-medium",
-                    project.color === "indigo" ? "text-indigo-400" : "text-cyan-400"
-                  )}>
-                    {project.category}
-                  </span>
-                </div>
+                <h3 className="mt-5 font-display text-fluid-2xl font-semibold">
+                  {project.title}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-accent">{project.tagline}</p>
+                <p className="mt-4 text-sm text-ink-muted">{project.summary}</p>
 
-                <h3 className="text-2xl font-bold text-white mb-3">{project.title}</h3>
-                <p className="text-slate-400 mb-8 leading-relaxed min-h-[4rem]">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2">
-                  {project.techStack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-slate-300"
-                    >
-                      {tech}
-                    </span>
+                <ul className="mt-5 space-y-2.5 border-t border-line pt-5">
+                  {project.highlights.map((point) => (
+                    <li key={point} className="flex gap-2.5 text-sm text-ink-soft">
+                      <span className="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-brand" aria-hidden />
+                      <span>{point}</span>
+                    </li>
                   ))}
+                </ul>
+
+                {/* mt-auto pins the footer so cards in a row line up. */}
+                <div className="mt-auto pt-6">
+                  <ul className="flex flex-wrap gap-2">
+                    {project.stack.map((tech) => (
+                      <li key={tech} className="chip">
+                        {tech}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {(project.live || project.source) && (
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      {project.live && (
+                        <a
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-primary h-10 px-4"
+                        >
+                          Live site
+                          <ArrowUpRight size={16} aria-hidden />
+                        </a>
+                      )}
+                      {project.source && (
+                        <a
+                          href={project.source}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-ghost h-10 px-4"
+                        >
+                          <Code2 size={16} aria-hidden />
+                          Source
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
-              
-              {/* Hover Line */}
-              <div className={cn(
-                "absolute bottom-0 left-0 h-1 w-full scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100",
-                project.color === "indigo" ? "bg-indigo-500" : "bg-cyan-500"
-              )} />
-            </motion.div>
-          ))}
-        </div>
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </ul>
+
+        <Reveal delay={2}>
+          <p className="mt-8 text-sm text-ink-muted">
+            My day-to-day work on the LawDocs platform is closed source.{" "}
+            <a
+              href={profile.links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-medium text-brand underline-offset-4 hover:underline"
+            >
+              <FaGithub size={14} aria-hidden />
+              More on GitHub
+            </a>
+          </p>
+        </Reveal>
       </div>
     </section>
   );

@@ -1,77 +1,148 @@
 "use client";
-import { motion } from "motion/react";
-import { Mail, MapPin, Phone } from "lucide-react";
+
+import { useState } from "react";
+import { Check, Copy, Mail, MapPin, Phone } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import Reveal from "@/components/Reveal";
+import { profile } from "@/lib/data";
+
+const channels = [
+  {
+    key: "github",
+    label: "GitHub",
+    value: "anishkushwaha03",
+    href: profile.links.github,
+    Icon: FaGithub,
+    external: true,
+  },
+  {
+    key: "linkedin",
+    label: "LinkedIn",
+    value: "anishkushwaha03",
+    href: profile.links.linkedin,
+    Icon: FaLinkedin,
+    external: true,
+  },
+  {
+    key: "phone",
+    label: "Phone",
+    value: profile.phone,
+    href: profile.phoneHref,
+    Icon: Phone,
+    external: false,
+  },
+] as const;
 
 export default function Contact() {
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard blocked — the address is selectable text right beside the button.
+    }
+  };
+
   return (
-    <section id="contact" className="py-24 relative overflow-hidden">
-      <div className="container mx-auto px-6 max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
-        >
-          <span className="section-tag">Contact</span>
+    <section id="contact" className="section relative overflow-hidden bg-canvas-alt">
+      <div className="aurora" aria-hidden />
+
+      <div className="rail relative z-10">
+        <Reveal className="max-w-2xl">
+          <p className="eyebrow">Contact</p>
           <h2 className="section-title">
-            Let's <span className="gradient-text">Connect</span>
+            Let&rsquo;s <span className="gradient-text">talk</span>
           </h2>
-          <p className="section-subtitle mx-auto">
-            I'm currently available for full-time opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
+          <p className="section-lede">
+            I&rsquo;m open to full-time roles. If you have a question about anything above, email
+            is the fastest way to reach me.
           </p>
-        </motion.div>
+        </Reveal>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="glass-card p-8 md:p-12 text-center"
-        >
-          <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 mb-12">
-            <a href="mailto:anishsinghkushwaha03@gmail.com" className="flex flex-col items-center gap-4 group">
-              <div className="w-16 h-16 rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-all">
-                <Mail size={28} />
-              </div>
-              <span className="text-slate-300 font-medium group-hover:text-white transition-colors">
-                anishsinghkushwaha03@gmail.com
+        <div className="mt-12 grid gap-6 lg:grid-cols-12">
+          <Reveal delay={1} className="lg:col-span-7">
+            <article className="surface h-full p-7 sm:p-9">
+              <span
+                className="grid h-11 w-11 place-items-center rounded-lg bg-brand-soft text-brand"
+                aria-hidden
+              >
+                <Mail size={21} />
               </span>
-            </a>
-            
-            <div className="flex flex-col items-center gap-4 group">
-              <div className="w-16 h-16 rounded-full bg-cyan-500/10 text-cyan-400 flex items-center justify-center group-hover:bg-cyan-500 group-hover:text-white transition-all cursor-default">
-                <MapPin size={28} />
-              </div>
-              <span className="text-slate-300 font-medium group-hover:text-white transition-colors cursor-default">
-                Jaipur, Rajasthan
-              </span>
-            </div>
 
-            <a href="tel:+917014756534" className="flex flex-col items-center gap-4 group">
-              <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                <Phone size={28} />
-              </div>
-              <span className="text-slate-300 font-medium group-hover:text-white transition-colors">
-                +91 7014756534
-              </span>
-            </a>
-          </div>
+              <h3 className="mt-5 font-display text-fluid-xl font-semibold">Email me</h3>
+              <p className="mt-1.5 text-sm text-ink-muted">
+                I read everything and reply to anything that isn&rsquo;t a cold pitch.
+              </p>
 
-          <a
-            href="mailto:anishsinghkushwaha03@gmail.com"
-            className="inline-flex h-14 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 px-8 text-lg font-bold text-white shadow-lg hover:shadow-cyan-500/25 hover:-translate-y-1 transition-all"
-          >
-            Say Hello 👋
-          </a>
-        </motion.div>
+              <div className="mt-6 flex flex-wrap items-center gap-2 rounded-xl border border-line bg-surface-raised p-2 pl-4">
+                <span className="select-all break-all font-mono text-sm text-ink">
+                  {profile.email}
+                </span>
+                <button
+                  type="button"
+                  onClick={copyEmail}
+                  className="ml-auto inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-xs font-medium text-ink-muted transition-colors hover:border-line-strong hover:text-ink"
+                >
+                  {copied ? (
+                    <>
+                      <Check size={14} aria-hidden className="text-ok" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={14} aria-hidden />
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
+              <span aria-live="polite" className="sr-only">
+                {copied ? "Email address copied to clipboard" : ""}
+              </span>
+
+              <a href={`mailto:${profile.email}`} className="btn btn-primary mt-5 w-full sm:w-auto">
+                <Mail size={17} aria-hidden />
+                Open in mail app
+              </a>
+
+              <p className="mt-6 flex items-center gap-1.5 text-sm text-ink-faint">
+                <MapPin size={14} aria-hidden />
+                Based in {profile.location}
+              </p>
+            </article>
+          </Reveal>
+
+          <Reveal delay={2} className="lg:col-span-5">
+            <ul className="grid h-full gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              {channels.map(({ key, label, value, href, Icon, external }) => (
+                <li key={key}>
+                  <a
+                    href={href}
+                    {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className="surface surface-lift flex h-full items-center gap-4 p-5"
+                  >
+                    <span
+                      className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-surface-raised text-ink-muted"
+                      aria-hidden
+                    >
+                      <Icon size={18} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block font-mono text-xs uppercase tracking-wider text-ink-faint">
+                        {label}
+                      </span>
+                      <span className="block truncate text-sm font-medium text-ink">{value}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
       </div>
-      
-      {/* Footer */}
-      <footer className="mt-24 border-t border-white/5 py-8 text-center text-slate-500 text-sm">
-        <p>Built with Next.js, Tailwind CSS, and Motion.</p>
-        <p className="mt-2">© {new Date().getFullYear()} Anish Kushwaha. All rights reserved.</p>
-      </footer>
     </section>
   );
 }

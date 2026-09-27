@@ -1,113 +1,163 @@
 "use client";
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { navLinks, profile } from "@/lib/data";
+import ThemeToggle from "./ThemeToggle";
 
-const links = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
-  { name: "Experience", href: "#experience" },
-];
+const sectionIds = navLinks.map((l) => l.href.slice(1));
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [active, setActive] = useState<string>("");
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Highlight the nav link for whichever section is currently in view.
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: [0, 0.25, 0.5, 1] }
+    );
+
+    const nodes = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((n): n is HTMLElement => n !== null);
+    nodes.forEach((n) => observer.observe(n));
+    return () => observer.disconnect();
+  }, []);
+
+  // Stop the page scrolling behind the open mobile sheet.
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+    <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
-        isScrolled
-          ? "bg-[#0f172a]/80 backdrop-blur-md border-white/5 py-4 shadow-xl"
-          : "bg-transparent py-6"
+        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,padding,box-shadow] duration-300 border-b",
+        scrolled
+          ? "border-line bg-canvas/85 py-3 shadow-[var(--shadow-md)] backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/70"
+          : "border-transparent bg-transparent py-5"
       )}
     >
-      <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
-        <a href="#home" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-cyan-500 flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:shadow-cyan-500/25 transition-all">
-            AK
-          </div>
-          <span className="font-bold text-xl tracking-tight hidden sm:block group-hover:text-cyan-400 transition-colors">
-            Anish Kushwaha
+      <nav className="rail flex items-center justify-between gap-4" aria-label="Primary">
+        <a href="#home" className="group flex items-center gap-2.5 rounded-lg">
+          <span
+            className="grid h-9 w-9 place-items-center rounded-lg bg-[linear-gradient(105deg,var(--grad-from),var(--grad-to))] font-display text-sm font-semibold text-white shadow-[var(--shadow-sm)]"
+            aria-hidden
+          >
+            {profile.initials}
+          </span>
+          <span className="hidden font-display text-[0.95rem] font-semibold tracking-tight sm:block">
+            {profile.name}
           </span>
         </a>
 
-        {/* Desktop Links */}
-        <ul className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
-            <li key={link.name}>
-              <a
-                href={link.href}
-                className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group"
-              >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan-400 transition-all group-hover:w-full rounded-full" />
-              </a>
-            </li>
-          ))}
+        <ul className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => {
+            const id = link.href.slice(1);
+            const isActive = active === id;
+            return (
+              <li key={link.name}>
+                <a
+                  href={link.href}
+                  aria-current={isActive ? "true" : undefined}
+                  className={cn(
+                    "relative inline-flex h-9 items-center rounded-lg px-3 text-sm font-medium transition-colors",
+                    isActive ? "text-ink" : "text-ink-muted hover:text-ink"
+                  )}
+                >
+                  {link.name}
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-pill"
+                      className="absolute inset-0 -z-10 rounded-lg bg-brand-soft"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
-        {/* Actions */}
-        <div className="flex items-center gap-4">
-          <a
-            href="mailto:anishsinghkushwaha03@gmail.com"
-            className="hidden sm:inline-flex h-10 items-center justify-center rounded-lg bg-white/10 px-6 text-sm font-medium text-white hover:bg-white/20 transition-colors"
-          >
-            Hire Me
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <a href="#contact" className="btn btn-primary hidden h-10 px-5 sm:inline-flex">
+            Get in touch
           </a>
-          
           <button
-            className="md:hidden p-2 text-slate-300 hover:text-white"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            type="button"
+            className="grid h-10 w-10 place-items-center rounded-lg border border-line bg-surface text-ink-muted transition-colors hover:text-ink md:hidden"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {menuOpen ? <X size={20} aria-hidden /> : <Menu size={20} aria-hidden />}
           </button>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          className="md:hidden bg-[#0f172a] border-b border-white/5"
-        >
-          <div className="container mx-auto px-6 py-4 flex flex-col gap-4">
-            {links.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-slate-300 hover:text-white text-lg font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.name}
-              </a>
-            ))}
-            <a
-              href="mailto:anishsinghkushwaha03@gmail.com"
-              className="inline-flex h-12 mt-2 items-center justify-center rounded-lg bg-gradient-to-r from-indigo-500 to-cyan-500 px-6 font-medium text-white shadow-lg"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Hire Me
-            </a>
-          </div>
-        </motion.div>
-      )}
-    </motion.nav>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            id="mobile-menu"
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="border-t border-line bg-canvas md:hidden"
+          >
+            <ul className="rail flex flex-col gap-1 py-4">
+              {navLinks.map((link) => (
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-lg px-3 py-3 text-base font-medium text-ink-soft transition-colors hover:bg-surface-raised hover:text-ink"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+              <li className="pt-2">
+                <a
+                  href="#contact"
+                  onClick={() => setMenuOpen(false)}
+                  className="btn btn-primary w-full"
+                >
+                  Get in touch
+                </a>
+              </li>
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 }
