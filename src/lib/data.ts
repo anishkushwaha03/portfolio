@@ -21,7 +21,7 @@ export const profile = {
   intro:
     "I build and scale a production legal-tech platform full-time — from relational schema design through secure REST APIs to deployment. Most of my work sits at the seam between a clean interface and a backend that can be trusted with confidential data.",
   about:
-    "I'm a Full Stack Developer at LawDocs, where I own features end to end on an Online Dispute Resolution platform. Day to day that means designing normalized PostgreSQL schemas with row-level security, writing REST APIs hardened with JWT auth and role-based access control, and wiring real-time chat over WebSockets. I care most about the parts users never see: the constraint that prevents bad data, the index that keeps a query fast, the policy that keeps one tenant's records invisible to another.",
+    "I'm a Full Stack Developer at LawDocs, where I own features end to end on an Online Dispute Resolution platform. Day to day that means a 70+ table multi-tenant schema on PostgreSQL, 120+ REST endpoints hardened with JWT, multi-factor auth and role-based access control, real-time case rooms over Socket.io, and background workers that chase SLA deadlines. I care most about the parts users never see: the constraint that prevents bad data, the index that keeps a query fast, the retry that stops a missed deadline becoming a missed hearing.",
 } as const;
 
 /** Rotating phrases in the hero. Kept short so the line never wraps on mobile. */
@@ -37,9 +37,9 @@ export const heroRoles = [
  * if the resume changes, change these too.
  */
 export const stats = [
-  { value: "5", suffix: "mo", label: "Intern to full-time" },
+  { value: "120", suffix: "+", label: "REST endpoints shipped" },
+  { value: "70", suffix: "+", label: "Tables in production schema" },
   { value: "3", suffix: "", label: "Production systems shipped" },
-  { value: "20", suffix: "+", label: "Technologies in production" },
 ] as const;
 
 export const highlights = [
@@ -51,17 +51,27 @@ export const highlights = [
   {
     icon: "database",
     title: "Relational data modelling",
-    body: "Normalized PostgreSQL schemas, indexing, row-level security.",
+    body: "70+ table multi-tenant schema, indexed query paths, tenant-scoped access.",
   },
   {
     icon: "shield",
     title: "API security",
-    body: "JWT auth, RBAC, Zod validation, rate limiting, HMAC webhooks.",
+    body: "JWT, multi-factor auth, RBAC, Zod validation, per-route rate limiting.",
   },
   {
     icon: "radio",
     title: "Real-time systems",
-    body: "Socket.io channels backed by Redis message caching.",
+    body: "Socket.io case rooms over authenticated room-join handshakes.",
+  },
+  {
+    icon: "workflow",
+    title: "Background workers",
+    body: "pg-boss job queue driving email, scheduling and SLA escalation.",
+  },
+  {
+    icon: "plug",
+    title: "Third-party integrations",
+    body: "KYC and eSign, escrow payments and payouts, Teams scheduling.",
   },
 ] as const;
 
@@ -80,14 +90,14 @@ export const journey = [
   },
   {
     period: "Aug 2026",
-    title: "Promoted to full-time",
+    title: "Moved to full-time",
     detail: "Software Developer, after five months as an intern",
     tone: "ok",
   },
   {
     period: "Now",
     title: "Scaling the platform",
-    detail: "Real-time dispute resolution in production",
+    detail: "120+ endpoints, 70+ tables, real-time case rooms in production",
     tone: "ok",
   },
 ] as const;
@@ -135,10 +145,12 @@ export const skillGroups: SkillGroup[] = [
       "Socket.io",
       "WebSockets",
       "JWT authentication",
+      "Multi-factor auth",
       "RBAC",
       "Zod validation",
       "Rate limiting",
       "HMAC verification",
+      "pg-boss job queues",
     ],
   },
   {
@@ -162,7 +174,30 @@ export const skillGroups: SkillGroup[] = [
     label: "Cloud & DevOps",
     icon: "cloud",
     blurb: "Getting it shipped, repeatably.",
-    items: ["AWS S3", "Vercel", "Git", "GitHub", "GitHub Actions", "Docker", "Postman", "npm"],
+    items: [
+      "AWS S3",
+      "Vercel",
+      "Git",
+      "GitHub",
+      "GitHub Actions",
+      "Docker",
+      "Postman",
+      "npm",
+    ],
+  },
+  {
+    id: "integrations",
+    label: "Integrations",
+    icon: "plug",
+    blurb: "Third-party services wired in end to end.",
+    items: [
+      "Razorpay (escrow & payouts)",
+      "Surepass KYC & eSign",
+      "Microsoft Graph / Teams",
+      "AWS S3 presigned URLs",
+      "Webhook verification",
+      "Transactional email",
+    ],
   },
   {
     id: "ai",
@@ -258,7 +293,7 @@ export const experience = [
     company: "LawDocs",
     location: "Jaipur, Rajasthan (Remote)",
     summary:
-      "Legal-tech platform for online dispute resolution. I joined as an intern and was promoted to full-time in five months on the strength of end-to-end feature delivery.",
+      "Legal-tech platform for online dispute resolution. I joined as an intern in March 2026 and moved to full-time in August, owning platform features end to end throughout.",
     roles: [
       {
         title: "Software Developer",
@@ -274,10 +309,12 @@ export const experience = [
       },
     ] as Role[],
     highlights: [
-      "Built a full-stack Online Dispute Resolution platform with Next.js, Node.js, Express.js, and PostgreSQL — owning the lifecycle from database design to production deployment.",
-      "Designed and normalized the relational schema on Supabase with Row Level Security policies, enforcing multi-tenant isolation for confidential legal records.",
-      "Implemented real-time chat and push notifications over WebSockets (Socket.io), backed by Redis message caching for fast message retrieval.",
-      "Developed secure REST endpoints with JWT authentication, role-based access control, and case-routing logic; integrated AWS S3 for document and evidence storage.",
+      "Built a full-stack Online Dispute Resolution platform with Next.js, Node.js, Express.js, and PostgreSQL — owning the lifecycle from relational schema design to production deployment.",
+      "Designed and normalized a multi-tenant relational schema on PostgreSQL (Supabase) across 70+ tables, with indexed query paths and tenant-scoped data access enforcing role-based confidentiality for privileged legal records.",
+      "Implemented real-time case rooms, chat, and notifications with Socket.io over authenticated room-join handshakes.",
+      "Built a PostgreSQL-backed job queue (pg-boss) running background workers for transactional email, session scheduling, and SLA deadline escalation with exponential-backoff retries.",
+      "Developed 120+ secure REST endpoints with JWT authentication, multi-factor auth enforcement, role-based access control, Zod request validation, and per-route rate limiting; integrated AWS S3 presigned uploads and downloads for evidence and document management.",
+      "Integrated third-party services end to end: Surepass for Aadhaar/PAN KYC and eSign, Razorpay for escrow payments and payouts with HMAC-SHA256 webhook verification, and Microsoft Graph for Teams hearing scheduling and attendance sync.",
       "Worked in an Agile cycle using Git and GitHub for pull-request reviews and iterative releases.",
     ],
     stack: [
@@ -287,9 +324,11 @@ export const experience = [
       "PostgreSQL",
       "Supabase",
       "Socket.io",
-      "Redis",
+      "pg-boss",
       "AWS S3",
       "JWT",
+      "Razorpay",
+      "Microsoft Graph",
     ],
   },
 ];
@@ -298,8 +337,7 @@ export const education = {
   degree: "B.Tech, Computer Science and Engineering",
   institution: "JECRC University, Jaipur",
   period: "2022 — 2026",
-  /** Add your CGPA here (e.g. "8.4 / 10") and the row appears automatically. */
-  cgpa: null as string | null,
+  cgpa: "7.5 / 10" as string | null,
   coursework: [
     "Data Structures and Algorithms",
     "Database Management Systems",

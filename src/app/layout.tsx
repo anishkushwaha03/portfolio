@@ -27,7 +27,7 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl = "https://anishkushwaha.vercel.app";
+const siteUrl = "https://portfolio-ten-psi-f4rfoqbrco.vercel.app";
 const description =
   "Anish Kushwaha is a Full Stack Developer building production legal-tech with Next.js, Node.js, and PostgreSQL — secure REST APIs, relational schema design, and real-time systems.";
 

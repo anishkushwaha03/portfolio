@@ -8,6 +8,7 @@ import {
   Compass,
   Database,
   Monitor,
+  Plug,
   Server,
   Sparkles,
 } from "lucide-react";
@@ -22,6 +23,7 @@ const icons: Record<string, LucideIcon> = {
   server: Server,
   database: Database,
   cloud: Cloud,
+  plug: Plug,
   sparkles: Sparkles,
   compass: Compass,
 };

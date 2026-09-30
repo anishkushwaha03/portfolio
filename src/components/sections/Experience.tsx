@@ -12,7 +12,8 @@ export default function Experience() {
             Where I&rsquo;ve <span className="gradient-text">done the work</span>
           </h2>
           <p className="section-lede">
-            One company, two titles — the second earned five months into the first.
+            One company, two titles, and a platform that handles confidential legal disputes
+            end to end.
           </p>
         </Reveal>
 

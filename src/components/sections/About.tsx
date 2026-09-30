@@ -1,4 +1,4 @@
-import { Database, Layers, Radio, ShieldCheck } from "lucide-react";
+import { Database, Layers, Plug, Radio, ShieldCheck, Workflow } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import { highlights, journey, profile } from "@/lib/data";
@@ -8,6 +8,8 @@ const icons: Record<string, LucideIcon> = {
   database: Database,
   shield: ShieldCheck,
   radio: Radio,
+  workflow: Workflow,
+  plug: Plug,
 };
 
 const toneClass: Record<string, string> = {
